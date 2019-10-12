@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -46,7 +47,11 @@ namespace DemoWebApp
 
             app.Use((context, next) =>
             {
-                context.Request.PathBase = new PathString("/demowebapp");
+                var forwardedForValue = context.Request.Headers.FirstOrDefault(x => x.Key == "X-Forwarded-For").Value.FirstOrDefault();
+                if (!string.IsNullOrWhiteSpace(forwardedForValue))
+                {
+                    context.Request.PathBase = new PathString("/demowebapp");
+                }
                 return next();
             });
 
