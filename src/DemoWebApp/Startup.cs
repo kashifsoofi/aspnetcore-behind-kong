@@ -44,6 +44,12 @@ namespace DemoWebApp
                 // app.UseHsts();
             }
 
+            app.Use((context, next) =>
+            {
+                context.Request.PathBase = new PathString("/demowebapp");
+                return next();
+            });
+
             // app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
